@@ -15,4 +15,8 @@ public class User implements Hashable<String>{
 		return id;
 	}
 
+	public String getId() {
+		return id;
+	}
+	
 }

@@ -2,11 +2,11 @@ package util;
 
 public class HashTable<T extends Hashable<String>> {
 
-	private Node<T>[] items;
+	private Node<T>[] table;
 	
 	public HashTable(int arraySize) {
 		
-		this.items=new Node[arraySize];
+		this.table=new Node[arraySize];
 		
 	}
 	
@@ -16,7 +16,7 @@ public class HashTable<T extends Hashable<String>> {
 		
 		int last=key.charAt(dataSize-1)-32;
 		
-		return last%items.length;
+		return last%table.length;
 		
 	}
 	
@@ -25,8 +25,8 @@ public class HashTable<T extends Hashable<String>> {
 		int index=hash(element.getKey());
 		Node<T> node=new Node<T>(element);
 		
-//		node.setNextNode(items[index]);
-		items[index]=node;
+		node.setNext(table[index]);
+		table[index]=node;
 		
 	}
 	
@@ -34,7 +34,7 @@ public class HashTable<T extends Hashable<String>> {
 		
 		int index=hash(key);
 		
-		Node<T> actualNode=items[index];
+		Node<T> actualNode=table[index];
 		while((actualNode!=null) && (!key.equals(actualNode.getElement().getKey()) ) ){
 			actualNode=actualNode.getNext();
 		}
@@ -47,26 +47,35 @@ public class HashTable<T extends Hashable<String>> {
 		return element;
 	}
 	
-	public void remove(String key){
+	public boolean remove(String key){
 		int index=hash(key);
 		
 		Node<T> prevNode=null;
-		Node<T> actualNode=items[index];
+		Node<T> actualNode=table[index];
 		
 		while((actualNode!=null) && (!key.equals(actualNode.getElement().getKey()) ) ){
 			prevNode=actualNode;
 			actualNode=actualNode.getNext();
 		}
 		
+		boolean found=true;
 		if(actualNode!=null) {
 			if(prevNode==null){
-				items[index]=actualNode.getNext();
+				table[index]=actualNode.getNext();
 			}
 			else{
 				prevNode.setNext(actualNode.getNext());
 			}
 		}
+		else{
+			found=false;
+		}
 		
+		return found;
+	}
+	
+	public Node<T>[] getTable(){
+		return table;
 	}
 	
 }
