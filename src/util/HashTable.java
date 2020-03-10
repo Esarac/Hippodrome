@@ -1,6 +1,6 @@
 package util;
 
-public class HashTable<T extends Hashable<String>> {
+public class HashTable<T extends Hashable<K>, K> implements InterfaceHashTable<T, K>{
 
 	private Node<T>[] table;
 	
@@ -10,11 +10,12 @@ public class HashTable<T extends Hashable<String>> {
 		
 	}
 	
-	public int hash(String key){
+	public int hash(K key){
 		
-		int dataSize=key.length();
+		String sKey=key.toString();
+		int dataSize=sKey.length();
 		
-		int last=key.charAt(dataSize-1)-32;
+		int last=sKey.charAt(dataSize-1)-32;
 		
 		return last%table.length;
 		
@@ -30,7 +31,7 @@ public class HashTable<T extends Hashable<String>> {
 		
 	}
 	
-	public T get(String key){
+	public T get(K key){
 		
 		int index=hash(key);
 		
@@ -47,7 +48,7 @@ public class HashTable<T extends Hashable<String>> {
 		return element;
 	}
 	
-	public boolean remove(String key){
+	public boolean remove(K key){
 		int index=hash(key);
 		
 		Node<T> prevNode=null;
@@ -72,6 +73,19 @@ public class HashTable<T extends Hashable<String>> {
 		}
 		
 		return found;
+	}
+	
+	public int quantity(){
+		int sum=0;
+		
+		for(Node<T> actualNode: table){
+			while(actualNode!=null){
+				actualNode=actualNode.getNext();
+				sum++;
+			}
+		}
+		
+		return sum;
 	}
 	
 	public Node<T>[] getTable(){

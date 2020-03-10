@@ -11,15 +11,15 @@ import org.junit.jupiter.api.Test;
 class TestHashTable {
 
 	//Tested Class
-	private HashTable<User> hashTable;
+	private HashTable<User, String> hashTable;
 	
 	//Scene
 	private void setUpSceneEmpty(){
-		this.hashTable=new HashTable<User>(10);
+		this.hashTable=new HashTable<User, String>(10);
 	}
 	
 	private void setUpSceneNormal() {
-		this.hashTable=new HashTable<User>(10);
+		this.hashTable=new HashTable<User, String>(10);
 		hashTable.add(new User("220"));
 		hashTable.add(new User("124"));
 		hashTable.add(new User("983"));
@@ -78,6 +78,19 @@ class TestHashTable {
 		assertNull(table[6].getNext());
 		assertNull(table[0]);
 		
+	}
+	
+	@Test
+	void testQuantity(){
+		setUpSceneEmpty();
+		assertEquals(hashTable.quantity(),0);
+		
+		setUpSceneNormal();
+		assertEquals(hashTable.quantity(),4);
+		
+		hashTable.remove("220");
+		
+		assertEquals(hashTable.quantity(),3);
 	}
 	
 }
