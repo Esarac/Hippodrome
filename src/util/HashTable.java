@@ -1,6 +1,8 @@
 package util;
 
-public class HashTable<T extends Hashable<K>, K> implements InterfaceHashTable<T, K>{
+import exception.AlreadyExistException;
+
+public class HashTable<T extends Hashable> implements InterfaceHashTable<T>{
 
 	private Node<T>[] table;
 	
@@ -10,28 +12,42 @@ public class HashTable<T extends Hashable<K>, K> implements InterfaceHashTable<T
 		
 	}
 	
-	public int hash(K key){
+	public int hash(String key){
 		
-		String sKey=key.toString();
-		int dataSize=sKey.length();
+		int sum=0;
 		
-		int last=sKey.charAt(dataSize-1)-32;
+		for(int i=(key.length()-4); i<key.length(); i++){
+			int j=i;
+			
+			if(key.length()>4){
+				j=i-(key.length()-4);
+			}
+			
+			if(i>=0){
+				sum+=(key.charAt(i)*Math.pow(3, j));
+			}
+		}
 		
-		return last%table.length;
+		return sum%table.length;
 		
 	}
 	
 	public void add(T element){
 		
-		int index=hash(element.getKey());
-		Node<T> node=new Node<T>(element);
-		
-		node.setNext(table[index]);
-		table[index]=node;
+		if(get(element.getKey())==null){
+			int index=hash(element.getKey());
+			Node<T> node=new Node<T>(element);
+			
+			node.setNext(table[index]);
+			table[index]=node;
+		}
+		else{
+			throw new AlreadyExistException();
+		}
 		
 	}
 	
-	public T get(K key){
+	public T get(String key){
 		
 		int index=hash(key);
 		
@@ -48,7 +64,7 @@ public class HashTable<T extends Hashable<K>, K> implements InterfaceHashTable<T
 		return element;
 	}
 	
-	public boolean remove(K key){
+	public boolean remove(String key){
 		int index=hash(key);
 		
 		Node<T> prevNode=null;

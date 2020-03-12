@@ -2,7 +2,7 @@ package model;
 
 import util.Hashable;
 
-public class User implements Hashable<String>{
+public class User implements Hashable{
 
 	private String id;
 	

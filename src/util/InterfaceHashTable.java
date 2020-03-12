@@ -1,11 +1,11 @@
 package util;
 
-public interface InterfaceHashTable<T extends Hashable<K>, K> {
+public interface InterfaceHashTable<T extends Hashable> {
 
-	public int hash(K key);
+	public int hash(String key);
 	public void add(T element);
-	public T get(K key);
-	public boolean remove(K key);
+	public T get(String key);
+	public boolean remove(String key);
 	public int quantity();
 	
 }

@@ -1,7 +1,7 @@
 package util;
 
-public interface Hashable<T> {
+public interface Hashable {
 	
-	public T getKey();
+	public String getKey();
 	
 }

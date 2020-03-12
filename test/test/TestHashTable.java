@@ -8,48 +8,52 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import exception.AlreadyExistException;
+
 class TestHashTable {
 
 	//Tested Class
-	private HashTable<User, String> hashTable;
+	private HashTable<User> hashTable;
 	
 	//Scene
 	private void setUpSceneEmpty(){
-		this.hashTable=new HashTable<User, String>(10);
+		this.hashTable=new HashTable<User>(10);
 	}
 	
 	private void setUpSceneNormal() {
-		this.hashTable=new HashTable<User, String>(10);
+		this.hashTable=new HashTable<User>(10);
 		hashTable.add(new User("220"));
-		hashTable.add(new User("124"));
-		hashTable.add(new User("983"));
-		hashTable.add(new User("22:"));
+		hashTable.add(new User("213"));
+		hashTable.add(new User("326"));
+		hashTable.add(new User("659"));
 	}
 	
 	//Test
 	@Test
 	void testHash() {
 		setUpSceneEmpty();
-		assertEquals(hashTable.hash("220"), 6);
-		assertEquals(hashTable.hash("213"), 9);
-		assertEquals(hashTable.hash("326"), 2);
-		assertEquals(hashTable.hash("659"), 5);
+		assertEquals(hashTable.hash("111"), 7);
+		assertEquals(hashTable.hash("1111"), 0);
+		assertEquals(hashTable.hash("11111"), 0);
 	}
 
 	@Test
 	void testAdd() {
 		setUpSceneEmpty();
 		hashTable.add(new User("220"));
-		hashTable.add(new User("124"));
-		hashTable.add(new User("983"));
-		hashTable.add(new User("22:"));
+		hashTable.add(new User("213"));
+		hashTable.add(new User("326"));
+		hashTable.add(new User("659"));
+		assertThrows(AlreadyExistException.class, ()->{
+			hashTable.add(new User("220"));
+		});
 		
 		Node<User>[] table=hashTable.getTable();
 		
-		assertEquals(table[6].getElement().getId(), "22:");
-		assertEquals(table[0].getElement().getId(), "124");
-		assertEquals(table[9].getElement().getId(), "983");
-		assertEquals(table[6].getNext().getElement().getId(), "220");
+		assertEquals(table[2].getElement().getId(), "220");
+		assertEquals(table[6].getElement().getId(), "659");
+		assertEquals(table[7].getElement().getId(), "326");
+		assertEquals(table[6].getNext().getElement().getId(), "213");
 		
 	}
 	
@@ -58,9 +62,9 @@ class TestHashTable {
 		setUpSceneNormal();
 		
 		assertEquals(hashTable.get("220").getId(),"220");
-		assertEquals(hashTable.get("124").getId(),"124");
-		assertEquals(hashTable.get("983").getId(),"983");
-		assertEquals(hashTable.get("22:").getId(),"22:");
+		assertEquals(hashTable.get("659").getId(),"659");
+		assertEquals(hashTable.get("326").getId(),"326");
+		assertEquals(hashTable.get("213").getId(),"213");
 		assertNull(hashTable.get("793"));
 		
 	}
@@ -70,13 +74,14 @@ class TestHashTable {
 		setUpSceneNormal();
 		
 		assertTrue(hashTable.remove("220"));
-		assertTrue(hashTable.remove("124"));
-		assertFalse(hashTable.remove("793"));
+		assertTrue(hashTable.remove("659"));
+		assertFalse(hashTable.remove("783"));
 		
 		Node<User>[] table=hashTable.getTable();
 		
+		assertEquals(table[6].getElement().getKey(), "213");
 		assertNull(table[6].getNext());
-		assertNull(table[0]);
+		assertNull(table[2]);
 		
 	}
 	
