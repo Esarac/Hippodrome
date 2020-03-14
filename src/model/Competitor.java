@@ -15,5 +15,11 @@ public class Competitor {
 	}
 	
 	//Methods
+	public String getHorse() {
+		return horse;
+	}
 	
+	public String getRider() {
+		return rider;
+	}
 }

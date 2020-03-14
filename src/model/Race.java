@@ -10,7 +10,7 @@ public class Race {
 	private HashTable<User> users;
 	
 	//Constructor
-	private Race(int usersSize){
+	public Race(int usersSize){
 		this.competitors = new Queue<>();
 		this.users=new HashTable<User>(usersSize);
 	}
@@ -20,11 +20,17 @@ public class Race {
 		
 		competitors.enqueue(new Competitor(rider, horse));
 		
+		Competitor c = competitors.dequeue();
+		System.out.println(c.getHorse());
+		System.out.println(c.getRider());
 	}
 	
 	public void addUser(String id, String name, String rider, String horse, double betMoney) {
 		
 		users.add(new User(id, name, new Competitor(rider, horse), betMoney));
 	}
+	
+	
+	
 	
 }
