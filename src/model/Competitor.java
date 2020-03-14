@@ -5,13 +5,13 @@ public class Competitor {
 	//Attributes
 	private String horse;
 	private String rider;
-	private boolean won;
+	private double horseSpeed;
 	
 	//Constructor
 	public Competitor(String horse, String rider) {
 		this.horse=horse;
 		this.rider=rider;
-		this.won=false;
+		horseSpeed = Math.random();
 	}
 	
 	//Methods
