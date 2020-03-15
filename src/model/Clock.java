@@ -27,22 +27,30 @@ public class Clock {
 		}
 	}
 
-	public int getHour() {
-		return hour;
+	public String getHourStr() {
+		return hour >= 10 ? hour + "" : "0" + hour;
 	}
 
 	public void setHour(int hour) {
 		this.hour = hour;
 	}
 
+	public String getMinStr() {
+		return min >= 10 ? min + "" : "0" + min;
+	}
+
 	public int getMin() {
 		return min;
 	}
-
+	
 	public void setMin(int min) {
 		this.min = min;
 	}
 
+	public String getSecStr() {
+		return sec >= 10 ? sec + "" : "0" + sec;
+	}
+	
 	public int getSec() {
 		return sec;
 	}

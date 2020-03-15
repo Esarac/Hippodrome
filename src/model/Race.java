@@ -49,5 +49,7 @@ public class Race {
 		
 	}
 	
-	
+	public User searchUser(String id) {
+		return users.get(id);
+	}
 }

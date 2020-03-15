@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -15,16 +14,16 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-import javafx.util.Callback;
+import model.Clock;
 import model.Race;
+import thread.ClockThread;
 
 public class ViewController implements Initializable {
 
-	Race rc;
+	private Race rc;
+	private Clock clock;
 	
 	@FXML private AnchorPane root;
 	
@@ -35,11 +34,13 @@ public class ViewController implements Initializable {
 	@FXML private Button addUser;
 	@FXML private Button startRace;
 	
+	@FXML private Label l1;
+	@FXML private Label l2;
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		startNewRace();
 		loadHorseRegistration();
-		loadRacePreparation();
 		startHorseRegistration();
 	}
 	
@@ -62,6 +63,7 @@ public class ViewController implements Initializable {
 		startRace.setTranslateX(100);
 		startRace.setTranslateY(150);
 		startRace.setOnAction(e -> {
+			loadRacePreparation();
 			startRacePreparation();
 		});
 		
@@ -78,6 +80,7 @@ public class ViewController implements Initializable {
 	
 	public void loadRacePreparation() {
 		
+		ap2 = null;
 		ap2 = new AnchorPane();
 		addUser = new Button("Add user");
 		addUser.setTranslateX(100);
@@ -85,13 +88,38 @@ public class ViewController implements Initializable {
 		addUser.setOnAction(e -> {
 			addUser();
 		});
-		ap2.getChildren().addAll(addUser);
+		
+		l1 = null;
+		l1 = new Label();
+		l1.setTranslateX(100);
+		l1.setTranslateY(150);
+		
+		clock = null;
+		clock = new Clock();
+		
+		new ClockThread(clock, this).start();
+		
+		ap2.getChildren().addAll(addUser, l1);
+	}
+	
+	public void updateTime() {
+		
+		l1.setText("Time: " + clock.getMinStr() + ":" + clock.getSecStr());
+		
+		if (clock.getMin() >= 3) {
+			startRace();
+		}
+		
 	}
 	
 	public void startRacePreparation() {
 		
 		root.getChildren().clear();
 		root.getChildren().addAll(ap2);
+		
+	}
+	
+	public void startRace() {
 		
 	}
 	
