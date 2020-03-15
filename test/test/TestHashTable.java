@@ -1,5 +1,6 @@
 package test;
 
+import model.Competitor;
 import model.User;
 import util.HashTable;
 import util.Node;
@@ -22,10 +23,10 @@ class TestHashTable {
 	
 	private void setUpSceneNormal() {
 		this.hashTable=new HashTable<User>(10);
-		hashTable.add(new User("220"));
-		hashTable.add(new User("213"));
-		hashTable.add(new User("326"));
-		hashTable.add(new User("659"));
+		hashTable.add(new User("220", "Esteban Ariza",new Competitor("Nayeon", "Tzuyu"), 1000));
+		hashTable.add(new User("213", "Mateo Valdes",new Competitor("Sana", "Momo"), 1000));
+		hashTable.add(new User("326", "Johan Giraldo",new Competitor("Dahyun", "Jihyo"), 1000));
+		hashTable.add(new User("659", "Juan Ossa",new Competitor("Chaeyoung", "Jeongyeon"), 1000));
 	}
 	
 	//Test
@@ -40,12 +41,12 @@ class TestHashTable {
 	@Test
 	void testAdd() {
 		setUpSceneEmpty();
-		hashTable.add(new User("220"));
-		hashTable.add(new User("213"));
-		hashTable.add(new User("326"));
-		hashTable.add(new User("659"));
+		hashTable.add(new User("220", "Esteban Ariza",new Competitor("Nayeon", "Tzuyu"), 1000));
+		hashTable.add(new User("213", "Mateo Valdes",new Competitor("Sana", "Momo"), 1000));
+		hashTable.add(new User("326", "Johan Giraldo",new Competitor("Dahyun", "Jihyo"), 1000));
+		hashTable.add(new User("659", "Juan Ossa",new Competitor("Chaeyoung", "Jeongyon"), 1000));
 		assertThrows(AlreadyExistException.class, ()->{
-			hashTable.add(new User("220"));
+			hashTable.add(new User("220", "Esteban Ariza",new Competitor("Nayeon", "Tzuyu"), 1000));
 		});
 		
 		Node<User>[] table=hashTable.getTable();
