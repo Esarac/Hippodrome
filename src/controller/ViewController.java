@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -21,7 +22,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import model.Clock;
 import model.Race;
 import thread.ClockThread;
@@ -30,27 +35,23 @@ public class ViewController implements Initializable {
 
 	private Race rc;
 	private Clock clock;
-	
+	private VBox vb2;
+	private VBox vb3;
 	private Button addUser;
 	private Button newRace;
-	
 	private Label l1;
 	private Label l2;
 	
-	
-	
 	@FXML private BorderPane root;
-	@FXML private VBox vb1;	
-	@FXML private VBox vb2;
-	@FXML private VBox vb3;
 	@FXML private Button addComp; 
 	@FXML private Button startRace;
+	@FXML private GridPane grid;
+	@FXML private Pane image;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		startNewRace();
 		loadHorseRegistration();
-		startHorseRegistration();
 	}
 	
 	public void startNewRace() {
@@ -87,8 +88,15 @@ public class ViewController implements Initializable {
 	}
 	
 	public void startHorseRegistration() {
-		root.setCenter(null);
-		root.setCenter(vb1);
+		if(!root.getChildren().contains(grid)) {
+			root.getChildren().clear();
+			grid.getChildren().clear();
+			grid.add(addComp, 0 , 0);
+			grid.add(startRace, 0 , 1);
+			image.setId("track");
+			root.setLeft(grid);
+			root.setCenter(image);
+		}
 	}
 	
 	public void loadRacePreparation() {
@@ -140,10 +148,15 @@ public class ViewController implements Initializable {
 	}
 	
 	public void startRacePreparation() {
-		root.setCenter(vb2);	
+		grid.getChildren().clear();
+		grid.add(addUser, 0, 0);
+		grid.add(l1, 0, 1);
+		GridPane.setMargin(addUser, new Insets(0, 0, 0, 50));
+		GridPane.setMargin(l1, new Insets(0, 0, 0, 50));
 	}
 	
 	public void startRace() {
+		root.setLeft(null);
 		root.setCenter(vb3);
 		
 	}
@@ -152,20 +165,31 @@ public class ViewController implements Initializable {
 
 		Dialog<ArrayList<String>> dialog = new Dialog<>();
 		setCss(dialog);
-		dialog.setTitle("Hello");
+		dialog.setTitle(null);
 		dialog.setHeaderText("Please enter the information");
 		dialog.setResizable(true);
 		 
-		Label l1 = new Label("Horse name: ");
-		Label l2 = new Label("Rider name: ");
+		Label l1 = new Label("Horse name");
+		Label l2 = new Label("Rider name");
 		TextField t1 = new TextField();
 		TextField t2 = new TextField();
-		         
+
+		
+		VBox box = new VBox();
+		applyProperties(box);
 		GridPane grid = new GridPane();
+		grid.setHgap(4); //horizontal gap in pixels => that's what you are asking for
+		grid.setVgap(10); //vertical gap in pixels
+		grid.setPadding(new Insets(10, 10, 10, 10));
 		grid.add(l1, 1, 1);
 		grid.add(t1, 2, 1);
 		grid.add(l2, 1, 2);
 		grid.add(t2, 2, 2);
+		box.getChildren().add(grid);
+		DialogPane dialogpane = dialog.getDialogPane();
+//		dialogpane.setPadding(new Insets(50, 50, 50, 50));
+		dialog.setHeight(200);
+		dialog.setWidth(200);
 		dialog.getDialogPane().setContent(grid);
 		         
 		ButtonType buttonTypeOk = new ButtonType("OK", ButtonData.OK_DONE);
