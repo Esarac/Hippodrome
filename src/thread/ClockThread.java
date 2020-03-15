@@ -12,6 +12,7 @@ public class ClockThread extends Thread {
 	public ClockThread(Clock clk, ViewController vcr) {
 		clock = clk;
 		vc = vcr;
+		this.setDaemon(true);
 	}
 
 	public void run() {
@@ -37,12 +38,6 @@ public class ClockThread extends Thread {
 			if (clock.getMin() >= 3) {
 				running = false;
 			}
-			
-			
-		}
-		
-
-		
+		}		
 	}
-	
 }

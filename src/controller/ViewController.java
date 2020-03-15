@@ -6,15 +6,21 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.image.Image;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import model.Clock;
 import model.Race;
@@ -24,18 +30,15 @@ public class ViewController implements Initializable {
 
 	private Race rc;
 	private Clock clock;
+	private VBox ap2;
+	private Button addUser;
+	private Label l1;
+	private Label l2;
 	
-	@FXML private AnchorPane root;
-	
-	@FXML private AnchorPane ap1;
-	@FXML private AnchorPane ap2;
-	
-	@FXML private Button addComp;
-	@FXML private Button addUser;
+	@FXML private BorderPane root;
+	@FXML private VBox ap1;	
+	@FXML private Button addComp; 
 	@FXML private Button startRace;
-	
-	@FXML private Label l1;
-	@FXML private Label l2;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -45,54 +48,50 @@ public class ViewController implements Initializable {
 	}
 	
 	public void startNewRace() {
-		rc = null;
 		rc = new Race(100);
+	}
+	
+	public void applyProperties(VBox vb) {
+		vb.setAlignment(Pos.CENTER);
+		vb.setPadding(new Insets(50, 50, 50, 50));
+		vb.setSpacing(15);
+	}
+	
+	public <T extends Dialog<?>> void setCss(T dialog) {
+		
+		DialogPane dialogPane = dialog.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/view/view.css").toExternalForm());
+		dialogPane.getStyleClass().add("dialog");
+		Stage stage = (Stage) dialogPane.getScene().getWindow();
+		stage.getIcons().add(new Image("file:med/Logo.png"));
 	}
 	
 	public void loadHorseRegistration() {
 
-		ap1 = new AnchorPane();
-		addComp = new Button("Add competitor");
-		addComp.setTranslateX(100);
-		addComp.setTranslateY(100);
 		addComp.setOnAction(e -> {
 			addCompetitor();
 		});
 		
-		startRace = new Button("Start race");
-		startRace.setTranslateX(100);
-		startRace.setTranslateY(150);
 		startRace.setOnAction(e -> {
 			loadRacePreparation();
 			startRacePreparation();
 		});
-		
-		ap1.getChildren().addAll(addComp, startRace);
-		
 	}
 	
 	public void startHorseRegistration() {
-		
-		root.getChildren().clear();
-		root.getChildren().addAll(ap1);
-		
+		root.setCenter(ap1);
 	}
 	
 	public void loadRacePreparation() {
 		
-		ap2 = null;
-		ap2 = new AnchorPane();
+		ap2 = new VBox();
+		applyProperties(ap2);
 		addUser = new Button("Add user");
-		addUser.setTranslateX(100);
-		addUser.setTranslateY(100);
 		addUser.setOnAction(e -> {
 			addUser();
 		});
 		
-		l1 = null;
 		l1 = new Label();
-		l1.setTranslateX(100);
-		l1.setTranslateY(150);
 		
 		clock = null;
 		clock = new Clock();
@@ -109,14 +108,10 @@ public class ViewController implements Initializable {
 		if (clock.getMin() >= 3) {
 			startRace();
 		}
-		
 	}
 	
 	public void startRacePreparation() {
-		
-		root.getChildren().clear();
-		root.getChildren().addAll(ap2);
-		
+		root.setCenter(ap2);	
 	}
 	
 	public void startRace() {
@@ -126,6 +121,7 @@ public class ViewController implements Initializable {
 	public void addCompetitor() {
 
 		Dialog<ArrayList<String>> dialog = new Dialog<>();
+		setCss(dialog);
 		dialog.setTitle("Hello");
 		dialog.setHeaderText("Please enter the information");
 		dialog.setResizable(true);
@@ -168,6 +164,7 @@ public class ViewController implements Initializable {
 		try {
 			
 			Dialog<ArrayList<String>> dialog = new Dialog<>();
+			setCss(dialog);
 			dialog.setTitle("Hello");
 			dialog.setHeaderText("Please enter the information");
 			dialog.setResizable(true);
@@ -223,13 +220,12 @@ public class ViewController implements Initializable {
 		catch (Exception e) {
 			
 			Alert alert = new Alert(AlertType.ERROR);
+			setCss(alert);
 			alert.setTitle("ERROR");
 			alert.setHeaderText("You have entered an invalid value");
 			alert.setContentText("Please check the values you entered and try again");
 			alert.showAndWait();
 			
 		}
-		
-
 	}
 }
