@@ -6,12 +6,14 @@ public class Competitor {
 	private String horse;
 	private String rider;
 	private double horseSpeed;
+	private double runDistance;
 	
 	//Constructor
 	public Competitor(String horse, String rider) {
 		this.horse=horse;
 		this.rider=rider;
-		horseSpeed = Math.random();
+		horseSpeed = Math.random() * 10;
+		runDistance = 0;
 	}
 	
 	//Methods
@@ -21,5 +23,13 @@ public class Competitor {
 	
 	public String getRider() {
 		return rider;
+	}
+	
+	public double getRunDistance() {
+		return runDistance;
+	}
+	
+	public void updatePos() {
+		runDistance += horseSpeed;
 	}
 }

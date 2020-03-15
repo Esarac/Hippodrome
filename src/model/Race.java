@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 import exception.InvalidAmountException;
 import util.HashTable;
 import util.Queue;
@@ -7,25 +9,29 @@ import util.Queue;
 public class Race {
 
 	//Attributes
-	private Queue<Competitor> competitors;
+	private Queue<Competitor> competitorQueue;
 	private HashTable<User> users;
+	private ArrayList<Competitor> competitorList;
 	
 	//Constructor
 	public Race(int usersSize){
-		this.competitors = new Queue<>();
+		this.competitorQueue = new Queue<>();
 		this.users=new HashTable<User>(usersSize);
+		this.competitorList = new ArrayList<>();
 	}
 	
 	//Methods
 	public void addCompetitor(String rider, String horse) {
 		
-		if (competitors.size() >= 10) {
-			
+		int competitorAmount = competitorQueue.size();
+		
+		if (competitorAmount >= 10) 
 			throw new InvalidAmountException("ERROR. There cannot be more than 10 competitors");
-			
+		else {
+			competitorQueue.enqueue(new Competitor(rider, horse));
+			competitorList.add(new Competitor(rider, horse));
 		}
 		
-		competitors.enqueue(new Competitor(rider, horse));
 		
 //		Competitor c = competitors.dequeue();
 //		System.out.println(c.getHorse());
@@ -40,12 +46,7 @@ public class Race {
 	
 	public boolean readyToRace() {
 		
-		if (competitors.size() < 7 || competitors.size() > 10) {
-			return false;
-		}
-		
-		return true;
-			
+		return true;	
 		
 	}
 	

@@ -30,13 +30,19 @@ public class ViewController implements Initializable {
 
 	private Race rc;
 	private Clock clock;
-	private VBox ap2;
+	
 	private Button addUser;
+	private Button newRace;
+	
 	private Label l1;
 	private Label l2;
 	
+	
+	
 	@FXML private BorderPane root;
-	@FXML private VBox ap1;	
+	@FXML private VBox vb1;	
+	@FXML private VBox vb2;
+	@FXML private VBox vb3;
 	@FXML private Button addComp; 
 	@FXML private Button startRace;
 	
@@ -48,6 +54,7 @@ public class ViewController implements Initializable {
 	}
 	
 	public void startNewRace() {
+		rc = null;
 		rc = new Race(100);
 	}
 	
@@ -60,6 +67,7 @@ public class ViewController implements Initializable {
 	public <T extends Dialog<?>> void setCss(T dialog) {
 		
 		DialogPane dialogPane = dialog.getDialogPane();
+		String str = getClass().getResource("/view/view.css").toExternalForm();
 		dialogPane.getStylesheets().add(getClass().getResource("/view/view.css").toExternalForm());
 		dialogPane.getStyleClass().add("dialog");
 		Stage stage = (Stage) dialogPane.getScene().getWindow();
@@ -79,13 +87,14 @@ public class ViewController implements Initializable {
 	}
 	
 	public void startHorseRegistration() {
-		root.setCenter(ap1);
+		root.setCenter(null);
+		root.setCenter(vb1);
 	}
 	
 	public void loadRacePreparation() {
 		
-		ap2 = new VBox();
-		applyProperties(ap2);
+		vb2 = new VBox();
+		applyProperties(vb2);
 		addUser = new Button("Add user");
 		addUser.setOnAction(e -> {
 			addUser();
@@ -98,23 +107,44 @@ public class ViewController implements Initializable {
 		
 		new ClockThread(clock, this).start();
 		
-		ap2.getChildren().addAll(addUser, l1);
+		vb2.getChildren().addAll(addUser, l1);
+	}
+	
+	public void loadRace() {
+		
+		vb3 = new VBox();
+		applyProperties(vb3);
+		newRace = new Button("Start new race");
+		newRace.setOnAction(e -> {
+			restart();
+		});
+		
+		vb3.getChildren().addAll(newRace);
+		
+		
 	}
 	
 	public void updateTime() {
 		
 		l1.setText("Time: " + clock.getMinStr() + ":" + clock.getSecStr());
 		
-		if (clock.getMin() >= 3) {
+		if (clock.getSec() > 3) {
+			loadRace();
 			startRace();
 		}
+		
+//		if (clock.getMin() >= 3) {
+//			loadRace();
+//			startRace();
+//		}
 	}
 	
 	public void startRacePreparation() {
-		root.setCenter(ap2);	
+		root.setCenter(vb2);	
 	}
 	
 	public void startRace() {
+		root.setCenter(vb3);
 		
 	}
 	
@@ -227,5 +257,11 @@ public class ViewController implements Initializable {
 			alert.showAndWait();
 			
 		}
+	}
+	
+	public void restart() {
+		
+		startNewRace();
+		startHorseRegistration();
 	}
 }

@@ -35,9 +35,14 @@ public class ClockThread extends Thread {
 				e.printStackTrace();
 			}
 			
-			if (clock.getMin() >= 3) {
-				running = false;
-			}
+//			if (clock.getMin() >= 3) {
+//				running = false;
+//			}
+			
+			if (clock.getSec() > 3) {
+			running = false;
+		}
+
 		}		
 	}
 }

@@ -3,6 +3,7 @@ package view;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import model.Clock;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
@@ -17,7 +18,9 @@ public class Main extends Application {
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
 			primaryStage.show();
-		} catch(Exception e) {
+			
+		} 
+		catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
