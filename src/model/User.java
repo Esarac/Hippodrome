@@ -19,11 +19,17 @@ public class User implements Hashable{
 	}
 	
 	//Methods
-	public String getKey() {
+	
+	//Get
+	public String getId() {
 		return id;
 	}
-
-	public String getId() {
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getKey() {
 		return id;
 	}
 	

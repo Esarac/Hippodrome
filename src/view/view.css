@@ -55,8 +55,8 @@
 /*Choice Box*/
 .choice-box {
 	
-  -fx-background-color: base_color;
-  -fx-mark-color: special_color;
+  -fx-background-color: special_color;
+  -fx-mark-color: base_color;
   
 }
 

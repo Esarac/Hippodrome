@@ -1,22 +1,33 @@
 package model;
 
-public class Competitor {
+import java.util.Comparator;
+
+public class Competitor implements Comparable<Competitor>{
 
 	//Attributes
 	private String horse;
 	private String rider;
-	private double horseSpeed;
-	private double runDistance;
+	private double speed;
 	
 	//Constructor
-	public Competitor(String horse, String rider) {
+	public Competitor(String rider, String horse) {
 		this.horse=horse;
 		this.rider=rider;
-		horseSpeed = Math.random() * 10;
-		runDistance = 0;
+		speed = Math.random() * 10;
+		
 	}
 	
 	//Methods
+	public int compareTo(Competitor competitor) {
+		return (int) ((competitor.speed*100000)-(speed*100000));
+	}
+	
+	//Set
+	public void setSpeed(double speed) {
+		this.speed=speed;
+	}
+	
+	//Get
 	public String getHorse() {
 		return horse;
 	}
@@ -25,11 +36,12 @@ public class Competitor {
 		return rider;
 	}
 	
-	public double getRunDistance() {
-		return runDistance;
+	public double getSpeed() {
+		return speed;
 	}
 	
-	public void updatePos() {
-		runDistance += horseSpeed;
+	public String toString(){
+		return rider+" - "+horse;
 	}
+	
 }

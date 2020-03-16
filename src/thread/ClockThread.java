@@ -31,18 +31,14 @@ public class ClockThread extends Thread {
 				Thread.sleep(1000);
 			} 
 			catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-//			if (clock.getMin() >= 3) {
-//				running = false;
-//			}
+			if (clock.getMin() >= 3) {
+				running = false;
+			}
 			
-			if (clock.getSec() > 3) {
-			running = false;
 		}
-
-		}		
+	
 	}
 }

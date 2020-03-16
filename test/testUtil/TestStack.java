@@ -1,11 +1,10 @@
-package test;
+package testUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
 import exception.EmptyListException;
-import util.Queue;
 import util.Stack;
 
 class TestStack {

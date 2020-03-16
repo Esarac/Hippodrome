@@ -1,4 +1,4 @@
-package test;
+package testUtil;
 
 import model.Competitor;
 import model.User;

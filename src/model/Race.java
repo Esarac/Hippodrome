@@ -1,6 +1,10 @@
 package model;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import util.Stack;
 
 import exception.InvalidAmountException;
 import util.HashTable;
@@ -9,48 +13,64 @@ import util.Queue;
 public class Race {
 
 	//Attributes
-	private Queue<Competitor> competitorQueue;
+	private Queue<Competitor> competitors;
 	private HashTable<User> users;
-	private ArrayList<Competitor> competitorList;
 	
 	//Constructor
 	public Race(int usersSize){
-		this.competitorQueue = new Queue<>();
+		this.competitors = new Queue<>();
 		this.users=new HashTable<User>(usersSize);
-		this.competitorList = new ArrayList<>();
 	}
 	
 	//Methods
 	public void addCompetitor(String rider, String horse) {
 		
-		int competitorAmount = competitorQueue.size();
-		
+		int competitorAmount = competitors.size();
 		if (competitorAmount >= 10) 
 			throw new InvalidAmountException("ERROR. There cannot be more than 10 competitors");
 		else {
-			competitorQueue.enqueue(new Competitor(rider, horse));
-			competitorList.add(new Competitor(rider, horse));
+			competitors.enqueue(new Competitor(rider, horse));
 		}
 		
-		
-//		Competitor c = competitors.dequeue();
-//		System.out.println(c.getHorse());
-//		System.out.println(c.getRider());
-		
 	}
 	
-	public void addUser(String id, String name, String rider, String horse, double betMoney) {
-		
-		users.add(new User(id, name, new Competitor(rider, horse), betMoney));
+	public void addUser(String id, String name, Competitor bet, double betMoney) {
+		users.add(new User(id, name, bet, betMoney));
 	}
 	
-	public boolean readyToRace() {
+	public  Competitor raceSimulator(){
+		Competitor winner=null;
 		
-		return true;	
+		if((7<=competitors.size()) && (competitors.size()<=10)){
+			
+			ArrayList<Competitor> list=competitors.toArrayList();
+			Collections.sort(list);
+			winner=list.get(0);
+			
+			Stack<Competitor> sAux=new Stack<Competitor>();
+			for(int i=0; i<list.size(); i++){
+				sAux.push(list.get(i));
+			}
+			
+			Queue<Competitor> qAux=new Queue<Competitor>();
+			while(!sAux.isEmpty()){
+				qAux.enqueue(sAux.pop());
+			}
+			competitors=qAux;
+			
+		}
+		else{
+			throw new InvalidAmountException("ERROR. There cannot be more than 10 competitors and less than 7 competitors.");
+		}
 		
+		return winner;
 	}
 	
 	public User searchUser(String id) {
 		return users.get(id);
+	}
+	
+	public Queue<Competitor> getCompetitors() {
+		return competitors;
 	}
 }

@@ -1,5 +1,7 @@
 package util;
 
+import java.util.ArrayList;
+
 import exception.EmptyListException;
 
 public class Queue<E> implements List<E> {
@@ -51,6 +53,18 @@ public class Queue<E> implements List<E> {
 		if(isEmpty())
 			throw new EmptyListException();
 		return first.getElement();
+	}
+	
+	public ArrayList<E> toArrayList(){
+		ArrayList<E> list=new ArrayList<E>();
+		
+		Node<E> actual=first;
+		while(actual!=null){
+			list.add(actual.getElement());
+			actual=actual.getNext();
+		}
+		
+		return list;
 	}
 	
 	@Override
