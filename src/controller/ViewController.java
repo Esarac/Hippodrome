@@ -50,6 +50,7 @@ public class ViewController implements Initializable {
 	private Label l2;
 	
 	@FXML private BorderPane root;
+	@FXML private VBox vb1;
 	@FXML private Button addComp; 
 	@FXML private Button startRace;
 	@FXML private GridPane grid;
@@ -104,8 +105,6 @@ public class ViewController implements Initializable {
 		});
 		
 		vb3.getChildren().addAll(newRace);
-		
-		
 	}
 		
 	//Start
@@ -116,7 +115,8 @@ public class ViewController implements Initializable {
 			grid.add(addComp, 0 , 0);
 			grid.add(startRace, 0 , 1);
 			image.setId("track");
-			root.setLeft(grid);
+			list.getItems().clear();
+			root.setLeft(vb1);
 			root.setCenter(image);
 		}
 	}
@@ -169,7 +169,7 @@ public class ViewController implements Initializable {
 				
 				Dialog<ButtonType> dialog = new Dialog<>();
 				setCss(dialog);
-				dialog.setTitle("Hello");
+				dialog.setTitle(null);
 				dialog.setHeaderText("Please enter the information");
 				dialog.setResizable(true);
 				 
@@ -223,7 +223,7 @@ public class ViewController implements Initializable {
 		else {
 			
 			ButtonType ok = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-			Alert alert = new Alert(AlertType.NONE, "There cannot be more that 10 competitors!", ok);
+			Alert alert = new Alert(AlertType.NONE, "There cannot be more than 10 competitors!", ok);
 			alert.setHeaderText(null);
 			alert.setTitle(null);
 			
@@ -258,7 +258,7 @@ public class ViewController implements Initializable {
 			
 			Dialog<ButtonType> dialog = new Dialog<>();
 			setCss(dialog);
-			dialog.setTitle("Hello");
+			dialog.setTitle(null);
 			dialog.setHeaderText("Please enter the information");
 			dialog.setResizable(true);
 			 
@@ -285,7 +285,7 @@ public class ViewController implements Initializable {
 			grid.add(cb3, 2, 3);
 			grid.add(l4, 1, 5);
 			grid.add(t4, 2, 5);
-			t4.setPromptText("US$");
+			t4.setPromptText("$");
 			dialog.getDialogPane().setContent(grid);
 			         
 			ButtonType cancel = new ButtonType("CANCEL", ButtonData.OK_DONE);
@@ -298,27 +298,59 @@ public class ViewController implements Initializable {
 			if(action.get()== ok) {
 				if(!t1.getText().isEmpty() && !t2.getText().isEmpty() && cb3.getValue()!=null && !t4.getText().isEmpty()){
 					race.addUser(t1.getText(), t2.getText(), cb3.getValue(), Double.parseDouble(t4.getText()));
-					list.getItems().add(new Label(t1.getText() + " - " + t2.getText() + " - " + cb3.getValue() + " - " + t4.getText()));
+//					list.getItems().add(new Label(t1.getText() + " - " + t2.getText() + " - " + cb3.getValue() + " - " + t4.getText()));
+					addBet(list, cb3.getValue().toString(), Integer.parseInt(t4.getText()));
 				}
 				else{
-					Alert alert = new Alert(AlertType.ERROR);
+					ButtonType accept = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+					Alert alert = new Alert(AlertType.NONE, "You have entered an invalid value, please check the values you entered and try again", accept);
+					alert.setHeaderText(null);
+					alert.setTitle(null);
+					
 					setCss(alert);
-					alert.setTitle("ERROR");
-					alert.setHeaderText("You have entered an invalid value");
-					alert.setContentText("Please check the values you entered and try again");
+					
 					alert.showAndWait();
 				}
 			}
 		} 
 		catch (Exception e) {
 			
-			Alert alert = new Alert(AlertType.ERROR);
+			ButtonType ok = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+			Alert alert = new Alert(AlertType.NONE, "You have entered an invalid value, please check the values you entered and try again", ok);
+			alert.setHeaderText(null);
+			alert.setTitle(null);
+			
 			setCss(alert);
-			alert.setTitle("ERROR");
-			alert.setHeaderText("You have entered an invalid value");
-			alert.setContentText("Please check the values you entered and try again");
+			
 			alert.showAndWait();
 			
+		}
+	}
+	
+	public void addBet(ListView<Label> list, String name, int bet) {
+		
+		Label label = new Label(name + " $" + bet);
+		boolean found = true;
+		
+		for(int i = 0; i < list.getItems().size() && found; i++) {
+			
+			String[] competitor = list.getItems().get(i).getText().split("-");
+			String line = competitor[0] + competitor[1];
+			competitor = line.split(" ");
+			String competitorName = (competitor[0] + " - " + competitor[2]);
+			
+			if(competitorName.equals(name)) {
+				
+				int a = Integer.parseInt(competitor[3].substring(1));
+				int newBet = a + bet;
+				
+				list.getItems().get(i).setText(name + " $" + newBet);
+				found = false;
+			}
+		}
+		
+		if(found) {
+			list.getItems().add(label);
 		}
 	}
 	

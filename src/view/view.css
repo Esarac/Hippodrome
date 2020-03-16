@@ -102,7 +102,7 @@
 .dialog > *.content.label {
 	
 	-fx-text-fill:text_color;
-	-fx-font: bold 9pt "Arial";/*TFONT*/
+	-fx-font: bold 11pt "Arial";/*TFONT*/
 }
 
 .dialog *.button {

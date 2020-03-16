@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 
 public class Main extends Application {
 	@Override
@@ -15,6 +16,7 @@ public class Main extends Application {
 			root.getStylesheets().add("/view/view.css");
 			root.getStyleClass().add("pane");
 			Scene scene = new Scene(root);
+			primaryStage.getIcons().add(new Image("file:med/Logo.png"));
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			
