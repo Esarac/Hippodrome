@@ -13,7 +13,7 @@ public class Competitor implements Comparable<Competitor>{
 	public Competitor(String rider, String horse) {
 		this.horse=horse;
 		this.rider=rider;
-		speed = Math.random() * 10;
+		speed = 5+(Math.random() * 5);
 		
 	}
 	

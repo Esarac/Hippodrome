@@ -1,6 +1,7 @@
 package controller;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
@@ -9,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -32,6 +34,7 @@ import model.Clock;
 import model.Competitor;
 import model.Race;
 import thread.ClockThread;
+import thread.CompetitorThread;
 
 public class ViewController implements Initializable {
 
@@ -101,12 +104,18 @@ public class ViewController implements Initializable {
 		GridPane.setMargin(search, new Insets(0, 0, 0, 10));
 		search.setVisible(false);
 		grid.add(search, 0, 1);
-		canvas = new Canvas();
+		
+		canvas = new Canvas(1000, 600);
 		root.setCenter(canvas);
+		
+		ArrayList<Competitor> competitors=race.getCompetitors().toArrayList();
+		for(int i=0; i<competitors.size(); i++) {
+			new CompetitorThread(competitors.get(i), i, this).start();
+		}
+		
 	}
 	
-	public void LoadRaceEnd() {
-		
+	public void loadRaceEnd() {
 		newRace.setDisable(false);
 		search.setVisible(true);
 	}
@@ -128,6 +137,16 @@ public class ViewController implements Initializable {
 	public void startNewRace() {
 		race = null;
 		race = new Race(100);
+		//Delete..
+//		race.addCompetitor("A", "A");
+//		race.addCompetitor("A", "A");
+//		race.addCompetitor("A", "A");
+//		race.addCompetitor("A", "A");
+//		race.addCompetitor("A", "A");
+//		race.addCompetitor("A", "A");
+//		race.addCompetitor("A", "A");
+//		race.addCompetitor("A", "A");
+		//...
 	}
 	
 	public void startRacePreparation() {
@@ -370,6 +389,18 @@ public class ViewController implements Initializable {
 			loadRace();
 			startRace();
 		}
+	}
+	
+	public void updateRace(int rail, int pos) {
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+		
+		double div=(canvas.getHeight()/race.getCompetitors().size());
+		gc.clearRect(0, rail*div, canvas.getWidth(), div);
+	
+//		Image img=new Image("https://cdn.shopify.com/s/files/1/0051/3074/7968/products/Figura_Milittlepony_E3136_Hasbro_1_76eb55d5-3123-4580-aa23-7751b2735f97_grande.jpg?v=1549644052");
+//		gc.drawImage(img, pos, rail*div, div, div);
+		gc.fillOval(pos, rail*div, div, div);
+		
 	}
 	
 	//CSS
