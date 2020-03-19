@@ -1,16 +1,14 @@
 package controller;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -28,11 +26,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
 import model.Clock;
 import model.Competitor;
 import model.Race;
@@ -42,16 +37,16 @@ public class ViewController implements Initializable {
 
 	private Race race;
 	private Clock clock;
-	private VBox vb2;
-	private VBox vb3;
 	private Button addUser;
 	private Button newRace;
 	private Label time;
 	private Label l2;
+	private TextField search;
+	private Canvas canvas;
 	
 	@FXML private BorderPane root;
 	@FXML private VBox vb1;
-	@FXML private Button addComp; 
+	@FXML private Button addComp;
 	@FXML private Button startRace;
 	@FXML private GridPane grid;
 	@FXML private Pane image;
@@ -78,8 +73,6 @@ public class ViewController implements Initializable {
 	
 	public void loadRacePreparation() {
 		
-		vb2 = new VBox();
-		applyProperties(vb2);
 		addUser = new Button("Add user");
 		addUser.setOnAction(e -> {
 			addUser();
@@ -91,30 +84,41 @@ public class ViewController implements Initializable {
 		clock = new Clock();
 		
 		new ClockThread(clock, this).start();
-		
-		vb2.getChildren().addAll(addUser, time);
 	}
 	
 	public void loadRace() {
 		
-		vb3 = new VBox();
-		applyProperties(vb3);
 		newRace = new Button("Start new race");
 		newRace.setOnAction(e -> {
 			restart();
 		});
 		
-		vb3.getChildren().addAll(newRace);
+		newRace.setDisable(true);
+		grid.getChildren().clear();
+		grid.add(newRace, 0, 0);
+		search = new TextField();
+		GridPane.setMargin(newRace, new Insets(0, 0, 0, 35));
+		GridPane.setMargin(search, new Insets(0, 0, 0, 10));
+		search.setVisible(false);
+		grid.add(search, 0, 1);
+		canvas = new Canvas();
+		root.setCenter(canvas);
+	}
+	
+	public void LoadRaceEnd() {
+		
+		newRace.setDisable(false);
+		search.setVisible(true);
 	}
 		
 	//Start
 	public void startHorseRegistration() {
-		if(!root.getChildren().contains(grid)) {
+		
+		if(!root.getChildren().contains(addComp)) {
 			root.getChildren().clear();
 			grid.getChildren().clear();
 			grid.add(addComp, 0 , 0);
 			grid.add(startRace, 0 , 1);
-			image.setId("track");
 			list.getItems().clear();
 			root.setLeft(vb1);
 			root.setCenter(image);
@@ -127,6 +131,7 @@ public class ViewController implements Initializable {
 	}
 	
 	public void startRacePreparation() {
+		
 		if(race.getCompetitors().size() >= 7) {
 			grid.getChildren().clear();
 			grid.add(addUser, 0, 0);
@@ -149,8 +154,6 @@ public class ViewController implements Initializable {
 	}
 	
 	public void startRace() {
-		root.setLeft(null);
-		root.setCenter(vb3);
 		
 	}
 	
@@ -298,7 +301,6 @@ public class ViewController implements Initializable {
 			if(action.get()== ok) {
 				if(!t1.getText().isEmpty() && !t2.getText().isEmpty() && cb3.getValue()!=null && !t4.getText().isEmpty()){
 					race.addUser(t1.getText(), t2.getText(), cb3.getValue(), Double.parseDouble(t4.getText()));
-//					list.getItems().add(new Label(t1.getText() + " - " + t2.getText() + " - " + cb3.getValue() + " - " + t4.getText()));
 					addBet(list, cb3.getValue().toString(), Integer.parseInt(t4.getText()));
 				}
 				else{
@@ -372,6 +374,7 @@ public class ViewController implements Initializable {
 	
 	//CSS
 	public void applyProperties(VBox vb) {
+		
 		vb.setAlignment(Pos.CENTER);
 		vb.setPadding(new Insets(50, 50, 50, 50));
 		vb.setSpacing(15);
