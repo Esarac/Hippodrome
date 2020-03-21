@@ -2,6 +2,7 @@ package thread;
 
 import controller.ViewController;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import model.Competitor;
 
 public class CompetitorThread extends Thread{
@@ -10,12 +11,14 @@ public class CompetitorThread extends Thread{
 	private Competitor competitor;
 	private int rail;
 	private ViewController controller;
+	private Image img;
 	
 	//Constructor
-	public CompetitorThread(Competitor competitor,int rail, ViewController controller){
+	public CompetitorThread(Competitor competitor,int rail, ViewController controller, Image img){
 		this.competitor=competitor;
 		this.rail=rail;
 		this.controller=controller;
+		this.img=img;
 		setDaemon(true);
 	}
 	
@@ -26,7 +29,7 @@ public class CompetitorThread extends Thread{
 			
 			int pos=i;
 			Runnable move=new Runnable() {
-				public void run() {controller.updateRace(rail, pos);}
+				public void run() {controller.updateRace(rail, pos, img);}
 			};
 			Platform.runLater(move);
 			
@@ -37,6 +40,7 @@ public class CompetitorThread extends Thread{
 				e.printStackTrace();
 			}
 		}
+		controller.loadRaceEnd();
 		
 	}
 	

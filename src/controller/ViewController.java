@@ -55,6 +55,8 @@ public class ViewController implements Initializable {
 	@FXML private Pane image;
 	@FXML private ListView<Label> list;
 	
+	private int auxFinish;
+	
 	//Initialize
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		startNewRace();
@@ -110,14 +112,23 @@ public class ViewController implements Initializable {
 		
 		ArrayList<Competitor> competitors=race.getCompetitors().toArrayList();
 		for(int i=0; i<competitors.size(); i++) {
-			new CompetitorThread(competitors.get(i), i, this).start();
+			Image img=new Image("file:med/Logo.png");
+			new CompetitorThread(competitors.get(i), i, this, img).start();
 		}
 		
 	}
 	
 	public void loadRaceEnd() {
-		newRace.setDisable(false);
-		search.setVisible(true);
+		if(auxFinish>=race.getCompetitors().size()-1){
+			newRace.setDisable(false);
+			search.setVisible(true);
+			System.out.println("Funciono");
+		}
+		else{
+			System.out.println("llegue");
+			auxFinish++;
+		}
+		
 	}
 		
 	//Start
@@ -138,14 +149,14 @@ public class ViewController implements Initializable {
 		race = null;
 		race = new Race(100);
 		//Delete..
-//		race.addCompetitor("A", "A");
-//		race.addCompetitor("A", "A");
-//		race.addCompetitor("A", "A");
-//		race.addCompetitor("A", "A");
-//		race.addCompetitor("A", "A");
-//		race.addCompetitor("A", "A");
-//		race.addCompetitor("A", "A");
-//		race.addCompetitor("A", "A");
+		race.addCompetitor("A", "A");
+		race.addCompetitor("A", "A");
+		race.addCompetitor("A", "A");
+		race.addCompetitor("A", "A");
+		race.addCompetitor("A", "A");
+		race.addCompetitor("A", "A");
+		race.addCompetitor("A", "A");
+		race.addCompetitor("A", "A");
 		//...
 	}
 	
@@ -380,26 +391,25 @@ public class ViewController implements Initializable {
 		
 		time.setText("Time: " + clock.getMinStr() + ":" + clock.getSecStr());
 		
-//		if (clock.getSec() > 3) {
-//			loadRace();
-//			startRace();
-//		}
-		
-		if (clock.getMin() >= 3) {
+		if (clock.getSec() > 3) {
 			loadRace();
 			startRace();
 		}
+		
+//		if (clock.getMin() >= 3) {
+//			loadRace();
+//			startRace();
+//		}
 	}
 	
-	public void updateRace(int rail, int pos) {
+	public void updateRace(int rail, int pos, Image img) {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		
 		double div=(canvas.getHeight()/race.getCompetitors().size());
 		gc.clearRect(0, rail*div, canvas.getWidth(), div);
 	
-//		Image img=new Image("https://cdn.shopify.com/s/files/1/0051/3074/7968/products/Figura_Milittlepony_E3136_Hasbro_1_76eb55d5-3123-4580-aa23-7751b2735f97_grande.jpg?v=1549644052");
-//		gc.drawImage(img, pos, rail*div, div, div);
-		gc.fillOval(pos, rail*div, div, div);
+		gc.drawImage(img, pos, rail*div, div, div);
+//		gc.fillOval(pos, rail*div, div, div);
 		
 	}
 	
