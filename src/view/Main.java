@@ -19,7 +19,9 @@ public class Main extends Application {
 			primaryStage.getIcons().add(new Image("file:med/Logo.png"));
 			primaryStage.setScene(scene);
 			primaryStage.show();
-			
+			primaryStage.setMinWidth(1450);
+			primaryStage.setMinHeight(800);
+			primaryStage.centerOnScreen();
 		} 
 		catch(Exception e) {
 			e.printStackTrace();

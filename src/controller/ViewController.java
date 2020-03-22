@@ -51,6 +51,9 @@ public class ViewController implements Initializable {
 	private Label l2;
 	private TextField search;
 	private Canvas canvas;
+	private Dialog<ButtonType> dialog;
+	private boolean show;
+	
 	
 	@FXML private BorderPane root;
 	@FXML private VBox vb1;
@@ -68,6 +71,7 @@ public class ViewController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		startNewRace();
 		loadHorseRegistration();
+		show = true;
 	}
 	
 	//Load
@@ -78,7 +82,6 @@ public class ViewController implements Initializable {
 		});
 		
 		startRace.setOnAction(e -> {
-			loadRacePreparation();
 			startRacePreparation();
 		});
 	}
@@ -113,7 +116,7 @@ public class ViewController implements Initializable {
 		rematch.setOnAction(e -> {
 			winner=null;
 			race.clearUsers();
-			loadRacePreparation();
+			rematch();
 		});
 		rematch.setDisable(true);
 		grid.add(rematch, 0, 1);
@@ -156,19 +159,20 @@ public class ViewController implements Initializable {
 				
 			}
 		});
-		GridPane.setMargin(newRace, new Insets(0, 0, 0, 35));
-		GridPane.setMargin(search, new Insets(0, 0, 0, 10));
+		GridPane.setMargin(newRace, new Insets(10, 0, 0, 35));
+		GridPane.setMargin(rematch, new Insets(0, 0, 0, 35));
 		search.setVisible(false);
-		grid.add(search, 0, 2);
 		
 		canvas = new Canvas(1000, 600);
 		root.setCenter(canvas);
+	}
+	
+	public void rematch() {
 		
-		ArrayList<Competitor> competitors=race.getCompetitors().toArrayList();
-		for(int i=0; i<competitors.size(); i++) {
-			new CompetitorThread(competitors.get(i), i, this).start();
-		}
+		loadRacePreparation();
+		startRacePreparation();
 		
+		root.setCenter(image);
 	}
 	
 	public void loadRaceEnd() {
@@ -176,8 +180,18 @@ public class ViewController implements Initializable {
 			winner=race.raceSimulator();
 			
 			auxFinish=0;
+			grid.getChildren().clear();
+			grid.add(search, 0, 0);
+			grid.add(newRace, 0, 1);
+			grid.add(rematch, 0, 2);
+			GridPane.setMargin(newRace, new Insets(25, 0, 0, 35));
+			GridPane.setMargin(rematch, new Insets(25, 0, 0, 35));
+			GridPane.setMargin(search, new Insets(0, 0, 0, 0));
+			VBox.setMargin(grid, new Insets(20, 0, 0, 0));
+			grid.setVgap(10);
 			newRace.setDisable(false);
 			rematch.setDisable(false);
+			search.setPromptText("Search");
 			search.setVisible(true);
 //			System.out.println("Final");
 		}
@@ -196,6 +210,8 @@ public class ViewController implements Initializable {
 			grid.getChildren().clear();
 			grid.add(addComp, 0 , 0);
 			grid.add(startRace, 0 , 1);
+			GridPane.setMargin(addComp, new Insets(10, 0, 0, 35));
+			VBox.setMargin(grid, new Insets(0, 0, 0, 0));
 			list.getItems().clear();
 			root.setLeft(vb1);
 			root.setCenter(image);
@@ -222,11 +238,13 @@ public class ViewController implements Initializable {
 	public void startRacePreparation() {
 		
 		if(race.getCompetitors().size() >= 7) {
+			loadRacePreparation();
 			grid.getChildren().clear();
 			grid.add(addUser, 0, 0);
 			grid.add(time, 0, 1);
-			GridPane.setMargin(addUser, new Insets(0, 0, 0, 50));
+			GridPane.setMargin(addUser, new Insets(10, 0, 0, 50));
 			GridPane.setMargin(time, new Insets(0, 0, 0, 50));
+			VBox.setMargin(grid, new Insets(0, 0, 0, 0));
 			list.getItems().clear();
 		}
 		else {
@@ -243,6 +261,11 @@ public class ViewController implements Initializable {
 	}
 	
 	public void startRace() {
+		
+		ArrayList<Competitor> competitors=race.getCompetitors().toArrayList();
+		for(int i=0; i<competitors.size(); i++) {
+			new CompetitorThread(competitors.get(i), i, this).start();
+		}
 	}
 	
 	public void restart() {
@@ -308,7 +331,6 @@ public class ViewController implements Initializable {
 				alert.setTitle(null);
 				alert.setHeaderText(null);
 				alert.show();
-				
 			}
 		}
 		else {
@@ -347,7 +369,7 @@ public class ViewController implements Initializable {
 		
 		try {
 			
-			Dialog<ButtonType> dialog = new Dialog<>();
+			dialog = new Dialog<>();
 			setCss(dialog);
 			dialog.setTitle(null);
 			dialog.setHeaderText("Please enter the information");
@@ -388,7 +410,7 @@ public class ViewController implements Initializable {
 			
 			if(action.get()== ok) {
 				if(!t1.getText().isEmpty() && !t2.getText().isEmpty() && cb3.getValue()!=null && !t4.getText().isEmpty()){
-					race.addUser(t1.getText(), t2.getText(), cb3.getValue(), Double.parseDouble(t4.getText()));
+					race.addUser(t1.getText(), t2.getText(), cb3.getValue(), Long.parseLong(t4.getText()));
 					addBet(list, cb3.getValue().toString(), Integer.parseInt(t4.getText()));
 				}
 				else{
@@ -398,26 +420,31 @@ public class ViewController implements Initializable {
 					alert.setTitle(null);
 					
 					setCss(alert);
-					
+
 					alert.showAndWait();
 				}
 			}
 		} 
 		catch (Exception e) {
 			
-			ButtonType ok = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-			Alert alert = new Alert(AlertType.NONE, "You have entered an invalid value, please check the values you entered and try again", ok);
-			alert.setHeaderText(null);
-			alert.setTitle(null);
-			
-			setCss(alert);
-			
-			alert.showAndWait();
-			
+			if(show) {
+				
+				ButtonType ok = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+				Alert alert = new Alert(AlertType.NONE, "You have entered an invalid value, please check the values you entered and try again", ok);
+				alert.setHeaderText(null);
+				alert.setTitle(null);
+				
+				setCss(alert);
+				alert.showAndWait();
+			}
+			else {
+				
+				show = true;
+			}
 		}
 	}
 	
-	public void addBet(ListView<Label> list, String name, int bet) {
+	public void addBet(ListView<Label> list, String name, long bet) {
 		
 		Label label = new Label(name + " $" + bet);
 		boolean found = true;
@@ -431,8 +458,8 @@ public class ViewController implements Initializable {
 			
 			if(competitorName.equals(name)) {
 				
-				int a = Integer.parseInt(competitor[3].substring(1));
-				int newBet = a + bet;
+				long a = Long.parseLong(competitor[3].substring(1));
+				long newBet = a + bet;
 				
 				list.getItems().get(i).setText(name + " $" + newBet);
 				found = false;
@@ -452,11 +479,23 @@ public class ViewController implements Initializable {
 //		if (clock.getSec() > 3) {
 //			loadRace();
 //			startRace();
+//			
+//			if(dialog != null && dialog.isShowing()) {
+//				
+//				show = false;
+//				dialog.getDialogPane().getScene().getWindow().hide();
+//			}
 //		}
 		
 		if (clock.getMin() >= 3) {
 			loadRace();
 			startRace();
+			
+			if(dialog != null && dialog.isShowing()) {
+				
+				show = false;
+				dialog.getDialogPane().getScene().getWindow().hide();
+			}
 		}
 	}
 	
@@ -478,7 +517,6 @@ public class ViewController implements Initializable {
 		gc.drawImage(img, pos, rail*div, div, div);
 	}
 	
-	//CSS
 	public void applyProperties(VBox vb) {
 		
 		vb.setAlignment(Pos.CENTER);
@@ -489,7 +527,6 @@ public class ViewController implements Initializable {
 	public <T extends Dialog<?>> void setCss(T dialog) {
 		
 		DialogPane dialogPane = dialog.getDialogPane();
-		String str = getClass().getResource("/view/view.css").toExternalForm();
 		dialogPane.getStylesheets().add(getClass().getResource("/view/view.css").toExternalForm());
 		dialogPane.getStyleClass().add("dialog");
 		Stage stage = (Stage) dialogPane.getScene().getWindow();
