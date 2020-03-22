@@ -31,7 +31,6 @@ public class Race {
 		else {
 			Competitor competitor=new Competitor(rider, horse);
 			competitors.enqueue(competitor);
-			addUser(rider,horse,competitor, 1000);
 		}
 		
 	}

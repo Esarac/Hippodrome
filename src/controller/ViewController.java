@@ -206,16 +206,16 @@ public class ViewController implements Initializable {
 		race = null;
 		race = new Race(100);
 		//Test..
-		race.addCompetitor("Ariza", "Acosta");
-		race.addCompetitor("Berja", "Bejarano de la santisima");
-		race.addCompetitor("Carlos", "Casa");
-		race.addCompetitor("Dinamo", "Dios");
-		race.addCompetitor("Esteban", "Electrocardiograma");
-		race.addCompetitor("Fiat", "Fiat");
-		race.addCompetitor("Golfa", "Glia");
-		race.addCompetitor("Hijo", "Hija");
-		race.addCompetitor("Inies", "Ines");
-		race.addCompetitor("Johan", "GGiraldo");
+//		race.addCompetitor("Ariza", "Acosta");
+//		race.addCompetitor("Berja", "Bejarano de la santisima");
+//		race.addCompetitor("Carlos", "Casa");
+//		race.addCompetitor("Dinamo", "Dios");
+//		race.addCompetitor("Esteban", "Electrocardiograma");
+//		race.addCompetitor("Fiat", "Fiat");
+//		race.addCompetitor("Golfa", "Glia");
+//		race.addCompetitor("Hijo", "Hija");
+//		race.addCompetitor("Inies", "Ines");
+//		race.addCompetitor("Johan", "Jiraldo");
 		//...
 	}
 	
@@ -449,15 +449,15 @@ public class ViewController implements Initializable {
 		
 		time.setText("Time: " + clock.getMinStr() + ":" + clock.getSecStr());
 		
-		if (clock.getSec() > 3) {
-			loadRace();
-			startRace();
-		}
-		
-//		if (clock.getMin() >= 3) {
+//		if (clock.getSec() > 3) {
 //			loadRace();
 //			startRace();
 //		}
+		
+		if (clock.getMin() >= 3) {
+			loadRace();
+			startRace();
+		}
 	}
 	
 	public void updateRace(int rail, int pos, String competitor,Image img) {
