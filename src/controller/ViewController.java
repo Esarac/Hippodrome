@@ -39,6 +39,7 @@ import model.Race;
 import model.User;
 import thread.ClockThread;
 import thread.CompetitorThread;
+import thread.MusicThread;
 
 public class ViewController implements Initializable {
 
@@ -72,6 +73,7 @@ public class ViewController implements Initializable {
 		startNewRace();
 		loadHorseRegistration();
 		show = true;
+		new MusicThread().start();
 	}
 	
 	//Load
