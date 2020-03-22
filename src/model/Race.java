@@ -29,7 +29,9 @@ public class Race {
 		if (competitorAmount >= 10) 
 			throw new InvalidAmountException("ERROR. There cannot be more than 10 competitors");
 		else {
-			competitors.enqueue(new Competitor(rider, horse));
+			Competitor competitor=new Competitor(rider, horse);
+			competitors.enqueue(competitor);
+			addUser(rider,horse,competitor, 1000);
 		}
 		
 	}
@@ -54,6 +56,7 @@ public class Race {
 			
 			Queue<Competitor> qAux=new Queue<Competitor>();
 			while(!sAux.isEmpty()){
+				sAux.peek().setSpeed(Competitor.randomSpeed());
 				qAux.enqueue(sAux.pop());
 			}
 			competitors=qAux;
@@ -64,6 +67,10 @@ public class Race {
 		}
 		
 		return winner;
+	}
+	
+	public void clearUsers(){
+		users=new HashTable<User>(users.getTable().length);
 	}
 	
 	public User searchUser(String id) {

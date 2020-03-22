@@ -29,6 +29,14 @@ public class User implements Hashable{
 		return name;
 	}
 	
+	public Competitor getBet(){
+		return bet;
+	}
+	
+	public double getBetMoney() {
+		return betMoney;
+	}
+	
 	public String getKey() {
 		return id;
 	}

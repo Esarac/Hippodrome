@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
@@ -26,6 +27,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -33,6 +36,7 @@ import javafx.scene.layout.Pane;
 import model.Clock;
 import model.Competitor;
 import model.Race;
+import model.User;
 import thread.ClockThread;
 import thread.CompetitorThread;
 
@@ -42,6 +46,7 @@ public class ViewController implements Initializable {
 	private Clock clock;
 	private Button addUser;
 	private Button newRace;
+	private Button rematch;
 	private Label time;
 	private Label l2;
 	private TextField search;
@@ -55,7 +60,9 @@ public class ViewController implements Initializable {
 	@FXML private Pane image;
 	@FXML private ListView<Label> list;
 	
+	//Aux
 	private int auxFinish;
+	private Competitor winner;
 	
 	//Initialize
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -77,6 +84,7 @@ public class ViewController implements Initializable {
 	}
 	
 	public void loadRacePreparation() {
+		grid.getChildren().clear();
 		
 		addUser = new Button("Add user");
 		addUser.setOnAction(e -> {
@@ -92,41 +100,90 @@ public class ViewController implements Initializable {
 	}
 	
 	public void loadRace() {
+		grid.getChildren().clear();
 		
 		newRace = new Button("Start new race");
 		newRace.setOnAction(e -> {
 			restart();
 		});
-		
 		newRace.setDisable(true);
-		grid.getChildren().clear();
 		grid.add(newRace, 0, 0);
+		
+		rematch = new Button("Rematch");
+		rematch.setOnAction(e -> {
+			winner=null;
+			race.clearUsers();
+			loadRacePreparation();
+		});
+		rematch.setDisable(true);
+		grid.add(rematch, 0, 1);
+		
 		search = new TextField();
+		search.setOnKeyPressed(event->{
+			if(event.getCode().equals(KeyCode.ENTER)){
+				
+				User user=race.searchUser(search.getText());
+				
+				if(user!=null){
+					Dialog<ButtonType> dialog = new Dialog<>();
+					setCss(dialog);
+					dialog.setTitle(null);
+					dialog.setHeaderText(null);
+					dialog.setResizable(true);
+					 
+					Label name=new Label("Name: "+user.getName());
+					Label id=new Label("Id:"+user.getId());
+					Label bet=new Label("Bet: "+user.getBet());
+					Label money=new Label("Bet Money: "+user.getBetMoney());
+					Label win=new Label("Epic Fail!");
+					if(winner.equals(user.getBet()))
+						win.setText("Epic Win!");
+					
+					GridPane grid = new GridPane();
+					grid.setHgap(4);
+					grid.setVgap(10);
+					grid.add(name, 1, 1);
+					grid.add(id, 1, 2);
+					grid.add(bet, 1, 3);
+					grid.add(money, 1, 4);
+					grid.add(win, 1, 5);
+					dialog.getDialogPane().setContent(grid);
+					
+					ButtonType ok = new ButtonType("OK", ButtonData.OK_DONE);
+					dialog.getDialogPane().getButtonTypes().add(ok);
+					dialog.showAndWait();
+				}
+				
+			}
+		});
 		GridPane.setMargin(newRace, new Insets(0, 0, 0, 35));
 		GridPane.setMargin(search, new Insets(0, 0, 0, 10));
 		search.setVisible(false);
-		grid.add(search, 0, 1);
+		grid.add(search, 0, 2);
 		
 		canvas = new Canvas(1000, 600);
 		root.setCenter(canvas);
 		
 		ArrayList<Competitor> competitors=race.getCompetitors().toArrayList();
 		for(int i=0; i<competitors.size(); i++) {
-			Image img=new Image("file:med/Logo.png");
-			new CompetitorThread(competitors.get(i), i, this, img).start();
+			new CompetitorThread(competitors.get(i), i, this).start();
 		}
 		
 	}
 	
 	public void loadRaceEnd() {
 		if(auxFinish>=race.getCompetitors().size()-1){
+			winner=race.raceSimulator();
+			
+			auxFinish=0;
 			newRace.setDisable(false);
+			rematch.setDisable(false);
 			search.setVisible(true);
-			System.out.println("Funciono");
+//			System.out.println("Final");
 		}
 		else{
-			System.out.println("llegue");
 			auxFinish++;
+//			System.out.println("Llegue");
 		}
 		
 	}
@@ -148,15 +205,17 @@ public class ViewController implements Initializable {
 	public void startNewRace() {
 		race = null;
 		race = new Race(100);
-		//Delete..
-		race.addCompetitor("A", "A");
-		race.addCompetitor("A", "A");
-		race.addCompetitor("A", "A");
-		race.addCompetitor("A", "A");
-		race.addCompetitor("A", "A");
-		race.addCompetitor("A", "A");
-		race.addCompetitor("A", "A");
-		race.addCompetitor("A", "A");
+		//Test..
+		race.addCompetitor("Ariza", "Acosta");
+		race.addCompetitor("Berja", "Bejarano de la santisima");
+		race.addCompetitor("Carlos", "Casa");
+		race.addCompetitor("Dinamo", "Dios");
+		race.addCompetitor("Esteban", "Electrocardiograma");
+		race.addCompetitor("Fiat", "Fiat");
+		race.addCompetitor("Golfa", "Glia");
+		race.addCompetitor("Hijo", "Hija");
+		race.addCompetitor("Inies", "Ines");
+		race.addCompetitor("Johan", "GGiraldo");
 		//...
 	}
 	
@@ -184,7 +243,6 @@ public class ViewController implements Initializable {
 	}
 	
 	public void startRace() {
-		
 	}
 	
 	public void restart() {
@@ -402,15 +460,22 @@ public class ViewController implements Initializable {
 //		}
 	}
 	
-	public void updateRace(int rail, int pos, Image img) {
+	public void updateRace(int rail, int pos, String competitor,Image img) {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		
 		double div=(canvas.getHeight()/race.getCompetitors().size());
-		gc.clearRect(0, rail*div, canvas.getWidth(), div);
-	
-		gc.drawImage(img, pos, rail*div, div, div);
-//		gc.fillOval(pos, rail*div, div, div);
 		
+		//Rect
+		gc.setFill(Color.web("#86FFFC"));
+		gc.fillRect(0, rail*div, canvas.getWidth(), div);
+		//Line
+		gc.setFill(Color.BLUE);
+		gc.setLineWidth(1.0);
+		gc.strokeLine(0, rail*div+1, canvas.getWidth(), rail*div+1);
+		//Number
+		gc.fillText((rail+1)+"	"+competitor, 10, (rail*div)+(div/2));
+		//Img
+		gc.drawImage(img, pos, rail*div, div, div);
 	}
 	
 	//CSS
