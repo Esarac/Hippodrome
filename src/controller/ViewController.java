@@ -169,9 +169,7 @@ public class ViewController implements Initializable {
 	
 	public void rematch() {
 		
-		loadRacePreparation();
 		startRacePreparation();
-		
 		root.setCenter(image);
 	}
 	
