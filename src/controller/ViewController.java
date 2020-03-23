@@ -53,9 +53,6 @@ public class ViewController implements Initializable {
 	private Label time;
 	private TextField search;
 	private Canvas canvas;
-	private Dialog<ButtonType> dialog;
-	private boolean show;
-	
 	
 	@FXML private BorderPane root;
 	@FXML private VBox vb1;
@@ -68,6 +65,8 @@ public class ViewController implements Initializable {
 	//Aux
 	private int auxFinish;
 	private Competitor winner;
+	private Dialog<ButtonType> dialog;
+	private boolean show;
 	
 	//Initialize
 	public void initialize(URL arg0, ResourceBundle arg1) {

@@ -20,101 +20,132 @@ class TestStack {
 		}
 	}
 	
-	private void setUpScene1() {
-		
-		sk = new Stack<>();
-		
-		sk.push(9);
-		sk.push(90);
-		sk.push(2);
-		sk.push(76);
-		sk.push(34);
-	}
-	
 	private void setUpScene2() {
 		
 		sk = new Stack<>();
 	}
 	
 	@Test
-	void testStack() {
+	void testPop() {
 		
 		setUpScene();
 		
 		assertEquals(5, sk.size());
 		
 		assertEquals(5, sk.pop());
-		assertEquals(4, sk.size());
-		
 		assertEquals(4, sk.pop());
-		assertEquals(3, sk.size());
-		
 		assertEquals(3, sk.pop());
-		assertEquals(2, sk.size());
-		
-		assertEquals(2, sk.pop());
-		assertEquals(1, sk.size());
-		
+		assertEquals(2, sk.pop());	
 		assertEquals(1, sk.pop());
+		
 		assertEquals(0, sk.size());
 		
+		assertThrows(EmptyListException.class, () -> { sk.pop();});
 	}
 	
 	@Test
-	void testStack1() {
+	void testPush() {
 		
-		setUpScene1();
+		setUpScene2();
+		
+		sk.push(2);
+		sk.push(5);
+		sk.push(6);
+		sk.push(7);
+		sk.push(3);
 		
 		assertEquals(5, sk.size());
 		
-		assertEquals(34, sk.pop());
-		assertEquals(4, sk.size());
-		
-		assertEquals(76, sk.pop());
-		assertEquals(3, sk.size());
-		
+		assertEquals(3, sk.pop());
+		assertEquals(7, sk.pop());
+		assertEquals(6, sk.pop());
+		assertEquals(5, sk.pop());
 		assertEquals(2, sk.pop());
-		assertEquals(2, sk.size());
-		
-		assertEquals(90, sk.pop());
-		assertEquals(1, sk.size());
-		
-		assertEquals(9, sk.pop());
-		assertEquals(0, sk.size());
-		
 	}
 	
 	@Test
-	void testStack2() {
+	void testSize() {
 		
 		setUpScene2();
 		
 		assertEquals(0, sk.size());
 		
-		sk.push(2);
-		
+		sk.push(1);
 		assertEquals(1, sk.size());
 		
-		sk.push(3);
-		sk.push(9);
+		sk.push(2);
+		assertEquals(2, sk.size());
 		
+		sk.push(3);
+		sk.push(4);
+		assertEquals(4, sk.size());
+		
+		sk.pop();
 		assertEquals(3, sk.size());
 		
 		sk.pop();
-		
-		assertEquals(2, sk.size());
-		
-		assertEquals(3, sk.peek());
-		assertEquals(2, sk.size());
-		
 		sk.pop();
-		
-		assertEquals(2, sk.peek());
 		assertEquals(1, sk.size());
 		
+		sk.push(4);
+		assertEquals(2, sk.size());
+		
+		sk.pop();
+		sk.pop();
+		assertEquals(0, sk.size());
+	}
+	
+	@Test
+	void testPeek() {
+		
+		setUpScene2();
+		
+		sk.push(2);
+		sk.push(5);
+		sk.push(6);
+		sk.push(7);
+		sk.push(3);
+		
+		assertEquals(5, sk.size());
+		assertEquals(3, sk.peek());
+		assertEquals(5, sk.size());
+		
+		sk.pop();
 		sk.pop();
 		
-		assertThrows(EmptyListException.class, () -> { sk.pop();});
+		assertEquals(3, sk.size());
+		assertEquals(6, sk.peek());
+		assertEquals(3, sk.size());
+		
+		sk.pop();
+		sk.pop();
+		sk.pop();
+		
+		assertEquals(0, sk.size());
+		
 		assertThrows(EmptyListException.class, () -> { sk.peek();});
+	}
+	
+	@Test
+	void isEmpty() {
+		
+		setUpScene2();
+		
+		assertTrue(sk.isEmpty());
+		
+		sk.push(1);
+		
+		assertFalse(sk.isEmpty());
+		
+		sk.push(2);
+		sk.push(3);
+		
+		assertFalse(sk.isEmpty());
+		
+		sk.pop();
+		sk.pop();
+		sk.pop();
+		
+		assertTrue(sk.isEmpty());
 	}
 }
