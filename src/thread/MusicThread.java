@@ -1,10 +1,9 @@
 package thread;
 
 import java.io.File;
-
-
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 
 public class MusicThread extends Thread {
@@ -14,9 +13,13 @@ public class MusicThread extends Thread {
 	final static MediaPlayer mediaPlayer = new MediaPlayer(sound);
 	
 	public MusicThread() {
-		
-		setDaemon(true);
-	}
+
+        setDaemon(true);
+
+        mediaPlayer.setOnEndOfMedia( () -> {
+            mediaPlayer.seek(Duration.ZERO);
+        });
+    }
 	
 
 	public void run() {

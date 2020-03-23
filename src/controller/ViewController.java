@@ -1,7 +1,10 @@
 package controller;
 
 import java.net.URL;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
@@ -28,7 +31,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -49,7 +51,6 @@ public class ViewController implements Initializable {
 	private Button newRace;
 	private Button rematch;
 	private Label time;
-	private Label l2;
 	private TextField search;
 	private Canvas canvas;
 	private Dialog<ButtonType> dialog;
@@ -137,14 +138,15 @@ public class ViewController implements Initializable {
 					dialog.setResizable(true);
 					 
 					Label name=new Label("Name: "+user.getName());
-					Label id=new Label("Id:"+user.getId());
+					Label id=new Label("Id: "+user.getId());
 					Label bet=new Label("Bet: "+user.getBet());
-					Label money=new Label("Bet Money: "+user.getBetMoney());
+					Label money=new Label("Bet Money: "+(int)user.getBetMoney());
 					Label win=new Label("Epic Fail!");
 					if(winner.equals(user.getBet()))
 						win.setText("Epic Win!");
 					
 					GridPane grid = new GridPane();
+					grid.setPadding(new Insets(10, 40, 0, 40));
 					grid.setHgap(4);
 					grid.setVgap(10);
 					grid.add(name, 1, 1);
@@ -157,6 +159,17 @@ public class ViewController implements Initializable {
 					ButtonType ok = new ButtonType("OK", ButtonData.OK_DONE);
 					dialog.getDialogPane().getButtonTypes().add(ok);
 					dialog.showAndWait();
+				}
+				else {
+					
+					ButtonType ok = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+					Alert alert = new Alert(AlertType.NONE, "That user couldn't be found, please try again!", ok);
+					alert.setHeaderText(null);
+					alert.setTitle(null);
+					
+					setCss(alert);
+					
+					alert.showAndWait();
 				}
 				
 			}
@@ -191,7 +204,7 @@ public class ViewController implements Initializable {
 			grid.setVgap(10);
 			newRace.setDisable(false);
 			rematch.setDisable(false);
-			search.setPromptText("Search");
+			search.setPromptText("Type and press enter to search");
 			search.setVisible(true);
 //			System.out.println("Final");
 		}
@@ -411,7 +424,7 @@ public class ViewController implements Initializable {
 			if(action.get()== ok) {
 				if(!t1.getText().isEmpty() && !t2.getText().isEmpty() && cb3.getValue()!=null && !t4.getText().isEmpty()){
 					race.addUser(t1.getText(), t2.getText(), cb3.getValue(), Long.parseLong(t4.getText()));
-					addBet(list, cb3.getValue().toString(), Integer.parseInt(t4.getText()));
+					addBet(list, cb3.getValue().toString(), Long.parseLong(t4.getText()));
 				}
 				else{
 					ButtonType accept = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
@@ -444,29 +457,45 @@ public class ViewController implements Initializable {
 		}
 	}
 	
-	public void addBet(ListView<Label> list, String name, long bet) {
+	public void addBet(ListView<Label> list, String name, Long bet) throws ParseException {
 		
-		Label label = new Label(name + " $" + bet);
-		boolean found = true;
+		NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+		String money = format.format(bet);
 		
-		for(int i = 0; i < list.getItems().size() && found; i++) {
+		Label label = new Label(name + " " + money);
+		boolean notFound = true;
+		
+		String nameCompetitor = name.replaceAll(" - ", "");
+		nameCompetitor = nameCompetitor.replace(" ", "");
+		
+//		System.out.println("nameCompetitor: " + nameCompetitor);
+		
+		for(int i = 0; i < list.getItems().size() && notFound; i++) {
 			
-			String[] competitor = list.getItems().get(i).getText().split("-");
-			String line = competitor[0] + competitor[1];
-			competitor = line.split(" ");
-			String competitorName = (competitor[0] + " - " + competitor[2]);
+			String actualName = list.getItems().get(i).getText(); 
+			actualName = actualName.replaceAll(" - ", "");
+			actualName = actualName.replace(" ", "");
+			String betValue = actualName.substring(actualName.indexOf("$"));
+			actualName = actualName.substring(0, actualName.indexOf("$"));
 			
-			if(competitorName.equals(name)) {
+//			System.out.println("Actual: " + actualName);
+			
+			if(actualName.equals(nameCompetitor)) {
 				
-				long a = Long.parseLong(competitor[3].substring(1));
-				long newBet = a + bet;
+				Number moneyNumber = format.parse(betValue);
 				
-				list.getItems().get(i).setText(name + " $" + newBet);
-				found = false;
+//				System.out.println("betValue: " + betValue);
+				
+				Long a = moneyNumber.longValue();
+				Long newBet = a + bet;
+				money = format.format(newBet);
+				
+				list.getItems().get(i).setText(name + " " + money);
+				notFound = false;
 			}
 		}
 		
-		if(found) {
+		if(notFound) {
 			list.getItems().add(label);
 		}
 	}
