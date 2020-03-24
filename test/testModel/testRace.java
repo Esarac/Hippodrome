@@ -124,4 +124,13 @@ class testRace {
 		assertEquals(race.getCompetitors().dequeue().getHorse(), "Jihyo");
 		
 	}
+	
+	@Test
+	void testSearchUser() {
+		setUpSceneEmpty();
+		assertNull(race.searchUser("1000"));
+		
+		setUpSceneNormal();
+		assertEquals(race.searchUser("1000").getName(), "Nayeon");
+	}
 }
