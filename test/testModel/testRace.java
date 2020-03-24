@@ -13,7 +13,7 @@ import model.Race;
 import model.User;
 import util.HashTable;
 
-class testRace {
+class TestRace {
 
 	//Tested Class
 	private Race race;

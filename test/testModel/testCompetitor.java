@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import model.Competitor;
 
-class testCompetitor {
+class TestCompetitor {
 	
 	//Test
 	@Test
