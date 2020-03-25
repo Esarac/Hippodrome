@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Comparator;
-
 public class Competitor implements Comparable<Competitor>{
 
 	//Attributes

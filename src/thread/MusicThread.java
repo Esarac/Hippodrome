@@ -25,7 +25,7 @@ public class MusicThread extends Thread {
 	public void run() {
 
 		mediaPlayer.play();
-		
+		mediaPlayer.setVolume(0.15);
 	}
 	
 	
