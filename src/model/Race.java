@@ -74,6 +74,17 @@ public class Race {
 		return users.get(id);
 	}
 	
+	public ArrayList<Competitor> getPodium(){
+		ArrayList<Competitor> competitors=this.competitors.toArrayList();
+		ArrayList<Competitor> podium=new ArrayList<Competitor>();
+		
+		podium.add(competitors.get(competitors.size()-1));
+		podium.add(competitors.get(competitors.size()-2));
+		podium.add(competitors.get(competitors.size()-3));
+		
+		return podium;
+	}
+	
 	public Queue<Competitor> getCompetitors() {
 		return competitors;
 	}

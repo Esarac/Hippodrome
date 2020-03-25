@@ -133,4 +133,14 @@ class TestRace {
 		setUpSceneNormal();
 		assertEquals(race.searchUser("1000").getName(), "Nayeon");
 	}
+	
+	@Test
+	void testGetPodium() {
+		setUpSceneNormal();
+		race.raceSimulator();
+		
+		assertEquals(race.getPodium().get(0).getHorse(), "Jihyo");
+		assertEquals(race.getPodium().get(1).getHorse(), "Nayeon");
+		assertEquals(race.getPodium().get(2).getHorse(), "Dahyun");
+	}
 }

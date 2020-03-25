@@ -49,6 +49,7 @@ public class ViewController implements Initializable {
 	private Clock clock;
 	private Button addUser;
 	private Button newRace;
+	private Button showPodium;
 	private Button rematch;
 	private Label time;
 	private TextField search;
@@ -173,12 +174,46 @@ public class ViewController implements Initializable {
 				
 			}
 		});
+		
+		showPodium = new Button("Podium");
+		showPodium.setOnAction(e -> {
+			podium();
+		});
+		showPodium.setDisable(true);
+		grid.add(showPodium, 0, 2);
+		
 		GridPane.setMargin(newRace, new Insets(10, 0, 0, 35));
 		GridPane.setMargin(rematch, new Insets(0, 0, 0, 35));
+		GridPane.setMargin(showPodium, new Insets(0, 0, 0, 35));
 		search.setVisible(false);
 		
 		canvas = new Canvas(1000, 600);
 		root.setCenter(canvas);
+	}
+	
+	public void podium() {
+		Dialog<ButtonType> dialog = new Dialog<>();
+		setCss(dialog);
+		dialog.setTitle(null);
+		dialog.setHeaderText("Podium");
+		dialog.setResizable(true);
+		 
+		Label one=new Label("1. "+race.getPodium().get(0));
+		Label two=new Label("2. "+race.getPodium().get(1));
+		Label three=new Label("3. "+race.getPodium().get(2));
+		
+		GridPane grid = new GridPane();
+		grid.setPadding(new Insets(10, 40, 0, 40));
+		grid.setHgap(4);
+		grid.setVgap(10);
+		grid.add(one, 1, 1);
+		grid.add(two, 1, 2);
+		grid.add(three, 1, 3);
+		dialog.getDialogPane().setContent(grid);
+		
+		ButtonType ok = new ButtonType("OK", ButtonData.OK_DONE);
+		dialog.getDialogPane().getButtonTypes().add(ok);
+		dialog.showAndWait();
 	}
 	
 	public void rematch() {
@@ -196,6 +231,7 @@ public class ViewController implements Initializable {
 			grid.add(search, 0, 0);
 			grid.add(newRace, 0, 1);
 			grid.add(rematch, 0, 2);
+			grid.add(showPodium, 0, 3);
 			GridPane.setMargin(newRace, new Insets(25, 0, 0, 35));
 			GridPane.setMargin(rematch, new Insets(25, 0, 0, 35));
 			GridPane.setMargin(search, new Insets(0, 0, 0, 0));
@@ -203,6 +239,7 @@ public class ViewController implements Initializable {
 			grid.setVgap(10);
 			newRace.setDisable(false);
 			rematch.setDisable(false);
+			showPodium.setDisable(false);
 			search.setPromptText("Type and press enter to search");
 			search.setVisible(true);
 //			System.out.println("Final");
@@ -403,7 +440,7 @@ public class ViewController implements Initializable {
 			grid.setHgap(4);
 			grid.setVgap(10);
 			grid.add(l1, 1, 1);
-			grid.add(t1, 2, 1);
+			grid.add(t1, 2, 1); 
 			grid.add(l2, 1, 2);
 			grid.add(t2, 2, 2);
 			grid.add(l3, 1, 3);
